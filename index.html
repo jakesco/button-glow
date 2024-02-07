@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Button Glow</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link href="style.css" rel="stylesheet">
+    </head>
+    <body>
+
+        <button id="ab" class="button glow-effect">
+            Hover Me!
+            <svg class="glow-container">
+                <rect pathLength="100" stroke-linecap="round" class="glow-blur"></rect>
+                <rect pathLength="100" stroke-linecap="round" class="glow-line"></rect>
+            </svg>
+        </button>
+
+        <button class="button glow-effect"
+                data-glow-animation="false"
+            >
+            Hover Me!
+            <svg class="glow-container">
+                <rect pathLength="100" stroke-linecap="round" class="glow-blur"></rect>
+                <rect pathLength="100" stroke-linecap="round" class="glow-line"></rect>
+            </svg>
+        </button>
+
+    </body>
+</html>
+
+<script>
+    // Client-side script to reload the page when connection
+    // with live-reload websocket is lost.
+    (() => {
+        const socketUrl = "ws://localhost:8765";
+        const socket = new WebSocket(socketUrl);
+        socket.addEventListener('close', () => {
+            const maxAttempts = 3;
+            let backoff = 2000;
+            let attempts = 0;
+            const tryReconnect = () => {
+                attempts++;
+                if (attempts > maxAttempts) {
+                    console.error(
+                        "Could not reconnect to live-reload socket."
+                        + " Check the server and refresh manually."
+                    );
+                    return;
+                }
+                const socket = new WebSocket(socketUrl);
+                socket.addEventListener('error', () => {
+                    setTimeout(tryReconnect, backoff);
+                    backoff *= 2;
+                });
+                socket.addEventListener('open', () => {
+                    location.reload();
+                });
+            };
+            tryReconnect();
+        });
+    })();
+</script>

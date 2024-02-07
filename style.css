@@ -1,0 +1,97 @@
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    display: grid;
+    place-content: center;
+    gap: 2rem;
+    min-height: 100vh;
+    background: grey;
+}
+
+button {
+    cursor: pointer;
+    font-size: 2rem;
+    font-family: inherit;
+    font-weight: 700;
+    color: hsl(320, 40%, 40%);
+    background-color: hsl(349, 100%, 95%);
+    padding: 0.75em 1.25em;
+    border: 0;
+    border-radius: 1.25rem;
+}
+
+.glow-effect {
+    /* Some extra space around the
+     * svg so glow shows properly */
+    --svg-offset: 40px;
+    --glow-color: white;
+    --glow-line-thickness: 2px;
+    --glow-blur-size: 5px;
+    --animation-length: 600ms;
+    --glow-line-length: 20px;
+    position: relative;
+}
+
+.glow-container {
+    /* prevents hover on svg box */
+    pointer-events: none;
+    position: absolute;
+    inset: calc(var(--svg-offset) / -2);
+    /* width/height 100% is necessary here */
+    width: calc(100% + var(--svg-offset));
+    height: calc(100% + var(--svg-offset));
+    /* outline: 3px solid black; */
+    opacity: 0;
+}
+
+.glow-blur,
+.glow-line {
+    width: calc(100% - var(--svg-offset));
+    height: calc(100% - var(--svg-offset));
+    x: calc(var(--svg-offset) / 2);
+    y: calc(var(--svg-offset) / 2);
+    rx: 1.25rem;
+    fill: transparent;
+    stroke: magenta;
+    stroke-width: 5px;
+    stroke-dasharray: var(--glow-line-length) calc(50px - var(--glow-line-length));
+}
+
+.glow-line {
+    stroke: var(--glow-color);
+    stroke-width: var(--glow-line-thickness);
+}
+
+.glow-blur {
+    filter: blur(var(--glow-blur-size));
+    stroke: var(--glow-color);
+    stroke-width: var(--glow-blur-size);
+}
+
+.glow-effect:hover :is(.glow-blur, .glow-line) {
+    stroke-dashoffset: -80px;
+    transition:
+        stroke-dashoffset
+        var(--animation-length)
+        ease-in;
+}
+
+.glow-effect:hover .glow-container {
+    animation:
+        glow-visibility
+        var(--animation-length)
+        ease-in-out;
+}
+
+@keyframes glow-visibility {
+    0%, 100% { opacity: 0 }
+    25%, 75% { opacity: 1 }
+}
+
+.glow-effect[data-glow-animation="false"] {
+    --glow-line-length: 50px;
+}
